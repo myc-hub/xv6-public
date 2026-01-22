@@ -17,6 +17,9 @@ extern char end[]; // first address after kernel loaded from ELF file
 int
 main(void)
 {
+  // 内核主函数开始
+  cprintf("[KERNEL] main() started\n");
+  cprintf("[KERNEL] xv6 kernel is booting...\n");
   kinit1(end, P2V(4*1024*1024)); // phys page allocator
   kvmalloc();      // kernel page table
   mpinit();        // detect other processors

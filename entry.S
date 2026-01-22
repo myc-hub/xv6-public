@@ -44,6 +44,39 @@ _start = V2P_WO(entry)
 # Entering xv6 on boot processor, with paging off.
 .globl entry
 entry:
+  # === 添加内核入口标记 ===
+  # 直接写屏方式：在屏幕左上角显示"[KERNEL] ENTRY"
+  movl    $0xb8000, %edi      # 显存起始地址（文本模式）
+  movw    $0x0F5B, (%edi)     # '[' 白色
+  addl    $2, %edi
+  movw    $0x0F4B, (%edi)     # 'K' 白色
+  addl    $2, %edi
+  movw    $0x0F45, (%edi)     # 'E' 白色
+  addl    $2, %edi
+  movw    $0x0F52, (%edi)     # 'R' 白色
+  addl    $2, %edi
+  movw    $0x0F4E, (%edi)     # 'N' 白色
+  addl    $2, %edi
+  movw    $0x0F45, (%edi)     # 'E' 白色
+  addl    $2, %edi
+  movw    $0x0F4C, (%edi)     # 'L' 白色
+  addl    $2, %edi
+  movw    $0x0F5D, (%edi)     # ']' 白色
+  addl    $2, %edi
+  movw    $0x0F20, (%edi)     # 空格
+  addl    $2, %edi
+  movw    $0x0F45, (%edi)     # 'E'
+  addl    $2, %edi
+  movw    $0x0F4E, (%edi)     # 'N'
+  addl    $2, %edi
+  movw    $0x0F54, (%edi)     # 'T'
+  addl    $2, %edi
+  movw    $0x0F52, (%edi)     # 'R'
+  addl    $2, %edi
+  movw    $0x0F59, (%edi)     # 'Y'
+  addl    $2, %edi
+  # === 结束添加 ===
+
   # Turn on page size extension for 4Mbyte pages
   movl    %cr4, %eax
   orl     $(CR4_PSE), %eax
