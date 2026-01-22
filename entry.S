@@ -37,6 +37,7 @@ multiboot_header:
 # By convention, the _start symbol specifies the ELF entry point.
 # Since we haven't set up virtual memory yet, our entry point is
 # the physical address of 'entry'.
+#内核入口点
 .globl _start
 _start = V2P_WO(entry)
 
@@ -48,20 +49,24 @@ entry:
   orl     $(CR4_PSE), %eax
   movl    %eax, %cr4
   # Set page directory
+  #设置页目录（启用分页前的准备）
   movl    $(V2P_WO(entrypgdir)), %eax
   movl    %eax, %cr3
   # Turn on paging.
+  #启用分页
   movl    %cr0, %eax
   orl     $(CR0_PG|CR0_WP), %eax
   movl    %eax, %cr0
 
   # Set up the stack pointer.
+  #设置栈指针
   movl $(stack + KSTACKSIZE), %esp
 
   # Jump to main(), and switch to executing at
   # high addresses. The indirect call is needed because
   # the assembler produces a PC-relative instruction
   # for a direct jump.
+  #跳转到main函数（c代码）
   mov $main, %eax
   jmp *%eax
 

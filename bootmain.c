@@ -14,6 +14,7 @@
 
 void readseg(uchar*, uint, uint);
 
+//引导主函数：加载ELF格式的内核
 void
 bootmain(void)
 {
@@ -25,24 +26,30 @@ bootmain(void)
   elf = (struct elfhdr*)0x10000;  // scratch space
 
   // Read 1st page off disk
+  //1.读取ELF头部（前4096字节）
   readseg((uchar*)elf, 4096, 0);
 
   // Is this an ELF executable?
+  //2.验证ELF魔数
   if(elf->magic != ELF_MAGIC)
     return;  // let bootasm.S handle error
 
   // Load each program segment (ignores ph flags).
+  //3.加载每个程序段
   ph = (struct proghdr*)((uchar*)elf + elf->phoff);
   eph = ph + elf->phnum;
   for(; ph < eph; ph++){
     pa = (uchar*)ph->paddr;
+    //从磁盘读取段到内存
     readseg(pa, ph->filesz, ph->off);
+    //如果内存大小>文件大小，清零剩余部分
     if(ph->memsz > ph->filesz)
       stosb(pa + ph->filesz, 0, ph->memsz - ph->filesz);
   }
 
   // Call the entry point from the ELF header.
   // Does not return!
+  //4.跳转到内核入口点
   entry = (void(*)(void))(elf->entry);
   entry();
 }
