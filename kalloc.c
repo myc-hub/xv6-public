@@ -91,6 +91,12 @@ kalloc(void)
     kmem.freelist = r->next;
   if(kmem.use_lock)
     release(&kmem.lock);
+
+  // 分配成功后添加打印
+  if(r) {
+    cprintf("[MEM] alloc page at 0x%x\n", (uint)r);
+  }
+
   return (char*)r;
 }
 
