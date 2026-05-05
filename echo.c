@@ -7,7 +7,16 @@ main(int argc, char *argv[])
 {
   int i;
 
-  for(i = 1; i < argc; i++)
-    printf(1, "%s%s", argv[i], i+1 < argc ? " " : "\n");
+  // 添加用户态打印
+  printf(1, "[USER] calling write (echo program)\n");
+
+  for(i = 1; i < argc; i++){
+    write(1, argv[i], strlen(argv[i]));
+    if(i + 1 < argc){
+      write(1, " ", 1);
+    } else {
+      write(1, "\n", 1);
+    }
+  }
   exit();
 }
